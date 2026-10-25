@@ -68,7 +68,7 @@ export const BusinessDashboardPage: React.FC = () => {
   const COLORS = ['#142746', '#E6AE43', '#16A34A', '#3B82F6', '#8B5CF6'];
 
   return (
-    <div className="space-y-8">
+    <div className="min-w-0 space-y-8">
       {/* Top Banner & Period Selector */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
@@ -81,13 +81,13 @@ export const BusinessDashboardPage: React.FC = () => {
         </div>
 
         {/* Period Selector & Quick New Sale Button */}
-        <div className="flex items-center space-x-2">
-          <div className="bg-white p-1 rounded-xl border border-slate-200 shadow-sm flex text-xs font-semibold text-slate-600">
+        <div className="flex w-full min-w-0 flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+          <div className="grid w-full min-w-0 grid-cols-4 rounded-xl border border-slate-200 bg-white p-1 text-[10px] font-semibold text-slate-600 shadow-sm sm:w-auto sm:flex sm:text-xs">
             {['today', '7days', 'month', 'year'].map((p) => (
               <button
                 key={p}
                 onClick={() => setPeriod(p)}
-                className={`px-3 py-1.5 rounded-lg transition-colors capitalize ${
+                className={`min-w-0 whitespace-nowrap px-1.5 py-1.5 rounded-lg transition-colors capitalize sm:px-3 ${
                   period === p ? 'bg-brand-navy text-white font-bold' : 'hover:text-slate-900'
                 }`}
               >
@@ -98,7 +98,7 @@ export const BusinessDashboardPage: React.FC = () => {
 
           <NavLink
             to="/business/sales/new"
-            className="flex items-center space-x-1.5 bg-brand-amber hover:bg-brand-amber-light text-brand-navy font-bold py-2 px-3.5 rounded-xl text-xs transition-colors shadow-sm"
+            className="flex w-full items-center justify-center space-x-1.5 rounded-xl bg-brand-amber px-3.5 py-2 text-xs font-bold text-brand-navy shadow-sm transition-colors hover:bg-brand-amber-light sm:w-auto"
           >
             <Plus className="w-4 h-4 stroke-[3]" />
             <span>Iib Cusub</span>
@@ -205,15 +205,15 @@ export const BusinessDashboardPage: React.FC = () => {
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 gap-3 md:gap-4">
           {/* 1. Alaabta Faa'iidada laga helay */}
           <div className="relative overflow-hidden bg-gradient-to-br from-emerald-50/70 to-emerald-100/30 rounded-xl border border-emerald-200 p-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold text-emerald-900 uppercase tracking-wider flex items-center gap-1.5">
+              <span className="min-w-0 text-xs font-bold text-emerald-900 uppercase tracking-wider flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
                 Alaabta Faa'iido Keentay
               </span>
-              <div className="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center shadow-sm">
+              <div className="w-8 h-8 shrink-0 rounded-lg bg-emerald-600 text-white flex items-center justify-center shadow-sm">
                 <TrendingUp className="w-4 h-4 stroke-[2.5]" />
               </div>
             </div>
@@ -233,11 +233,11 @@ export const BusinessDashboardPage: React.FC = () => {
           {/* 2. Alaabta Isla Qiimahooda lagu iibiyay (Breakeven) */}
           <div className="relative overflow-hidden bg-gradient-to-br from-blue-50/70 to-sky-100/30 rounded-xl border border-blue-200 p-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold text-blue-900 uppercase tracking-wider flex items-center gap-1.5">
+              <span className="min-w-0 text-xs font-bold text-blue-900 uppercase tracking-wider flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-blue-500"></span>
                 Faa'iido iyo Khasaare La'aan
               </span>
-              <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center shadow-sm">
+              <div className="w-8 h-8 shrink-0 rounded-lg bg-blue-600 text-white flex items-center justify-center shadow-sm">
                 <Minus className="w-4 h-4 stroke-[3]" />
               </div>
             </div>
@@ -257,11 +257,11 @@ export const BusinessDashboardPage: React.FC = () => {
           {/* 3. Alaabta Qasaarada laga helay (Loss) */}
           <div className="relative overflow-hidden bg-gradient-to-br from-rose-50/70 to-red-100/30 rounded-xl border border-rose-200 p-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-bold text-rose-900 uppercase tracking-wider flex items-center gap-1.5">
+              <span className="min-w-0 text-xs font-bold text-rose-900 uppercase tracking-wider flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-rose-500"></span>
                 Alaabta Khasaaraha Keentay
               </span>
-              <div className="w-8 h-8 rounded-lg bg-rose-600 text-white flex items-center justify-center shadow-sm">
+              <div className="w-8 h-8 shrink-0 rounded-lg bg-rose-600 text-white flex items-center justify-center shadow-sm">
                 <TrendingDown className="w-4 h-4 stroke-[2.5]" />
               </div>
             </div>

@@ -28,8 +28,11 @@ import {
 } from 'recharts';
 import api from '../../api/client.js';
 import { StatCard } from '../../components/common/StatCard.js';
+import { useBusinessTheme } from '../../context/BusinessThemeContext.js';
 
 export const AdminDashboardPage: React.FC = () => {
+  const { theme } = useBusinessTheme();
+  const chartGridColor = theme === 'dark' ? '#334155' : '#cbd5e1';
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [showRecentMarkets, setShowRecentMarkets] = useState(false);
@@ -140,7 +143,7 @@ export const AdminDashboardPage: React.FC = () => {
                     <stop offset="95%" stopColor="#E6AE43" stopOpacity={0.0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                <CartesianGrid strokeDasharray="3 3" stroke={chartGridColor} strokeWidth={1} />
                 <XAxis dataKey="month" stroke="#94a3b8" fontSize={11} />
                 <YAxis stroke="#94a3b8" fontSize={11} allowDecimals={false} />
                 <Tooltip
@@ -172,7 +175,7 @@ export const AdminDashboardPage: React.FC = () => {
           <div className="h-64 w-full min-w-0 overflow-hidden">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={stats?.categoryDistribution || []}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                <CartesianGrid strokeDasharray="3 3" stroke={chartGridColor} strokeWidth={1} />
                 <XAxis dataKey="category" stroke="#94a3b8" fontSize={11} />
                 <YAxis stroke="#94a3b8" fontSize={11} allowDecimals={false} />
                 <Tooltip

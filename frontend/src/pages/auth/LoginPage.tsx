@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Lock, User, AlertCircle, ArrowRight, Check } from 'lucide-react';
+import { Eye, EyeOff, Lock, User, AlertCircle, ArrowRight, Check, Moon, Sun } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.js';
+import { useBusinessTheme } from '../../context/BusinessThemeContext.js';
 
 export const LoginPage: React.FC = () => {
   const [rememberMe, setRememberMe] = useState(() => {
@@ -20,6 +21,7 @@ export const LoginPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const { login } = useAuth();
+  const { theme, setTheme } = useBusinessTheme();
   const navigate = useNavigate();
 
   const handleRememberToggle = (checked: boolean) => {
@@ -78,6 +80,15 @@ export const LoginPage: React.FC = () => {
 
   return (
     <div className="relative min-h-[100dvh] w-full bg-gradient-to-br from-[#0a1626] via-[#10223d] to-[#162f55] flex flex-col items-center justify-center p-2.5 sm:p-6 lg:p-8 login-playfair font-playfair overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+        aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+        title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+        className="absolute right-4 top-4 z-20 rounded-xl border border-white/20 bg-white/10 p-2.5 text-white backdrop-blur transition-colors hover:bg-white/20"
+      >
+        {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+      </button>
       
       {/* ================= ANIMATED BACKGROUND ELEMENTS ================= */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">

@@ -29,6 +29,7 @@ import { ExpensesPage } from './pages/business/ExpensesPage.js';
 import { BusinessReportsPage } from './pages/business/BusinessReportsPage.js';
 import { BusinessSettingsPage } from './pages/business/BusinessSettingsPage.js';
 import { PwaInstallPrompt } from './components/common/PwaInstallPrompt.js';
+import { BusinessThemeProvider } from './context/BusinessThemeContext.js';
 
 // Protected Route Guard
 const ProtectedRoute: React.FC<{
@@ -79,6 +80,7 @@ const IndexRedirect: React.FC = () => {
 export const App: React.FC = () => {
   return (
     <AuthProvider>
+      <BusinessThemeProvider>
       <BrowserRouter>
         <Routes>
           {/* Index Route */}
@@ -130,6 +132,7 @@ export const App: React.FC = () => {
         </Routes>
         <PwaInstallPrompt />
       </BrowserRouter>
+      </BusinessThemeProvider>
     </AuthProvider>
   );
 };

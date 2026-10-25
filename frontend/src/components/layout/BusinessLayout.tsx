@@ -15,14 +15,22 @@ import {
   X,
   Plus,
   AlertTriangle,
+  Moon,
+  Sun,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.js';
 import { resolveApiAssetUrl } from '../../api/client.js';
 import { StorageMeter } from '../common/StorageMeter.js';
 import { NotificationsDropdown } from '../common/NotificationsDropdown.js';
+import { useBusinessTheme } from '../../context/BusinessThemeContext.js';
 
 export const BusinessLayout: React.FC = () => {
+  return <BusinessLayoutContent />;
+};
+
+const BusinessLayoutContent: React.FC = () => {
   const { user, tenant, logout } = useAuth();
+  const { theme, setTheme } = useBusinessTheme();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const isSuspended = tenant?.status === 'SUSPENDED';
@@ -52,7 +60,7 @@ export const BusinessLayout: React.FC = () => {
     <div style={brandStyles} className="h-screen h-[100dvh] w-full max-w-full overflow-hidden bg-brand-bg flex flex-col md:flex-row font-sans">
       {/* Mobile Header */}
       <div className="md:hidden bg-brand-navy text-white px-4 py-3 flex items-center justify-between shadow-md z-30 shrink-0">
-        <div className="flex items-center space-x-3">
+        <div className="flex min-w-0 flex-1 items-center space-x-2">
           <div className="bg-white px-2.5 py-1 rounded-xl shadow-sm flex items-center justify-center shrink-0">
             <img
               src={resolveApiAssetUrl(tenant?.logoUrl)}
@@ -64,17 +72,39 @@ export const BusinessLayout: React.FC = () => {
             />
           </div>
           <div className="truncate">
-            <span className="font-extrabold text-xs tracking-wide text-brand-amber truncate block">
+            <span className="block max-w-[88px] truncate text-xs font-extrabold tracking-wide text-brand-amber">
               {tenant?.name || 'Maraayn Business'}
             </span>
           </div>
         </div>
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-brand-navy-light"
+        <div
+          className="mx-2 flex min-w-0 items-center gap-1"
+          title="Maraayn Management System"
+          aria-label="Maraayn Management System"
         >
-          {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+          <img src="/logo.png" alt="" className="system-logo h-6 w-6 shrink-0 object-contain" />
+          <span className="hidden whitespace-nowrap text-[9px] font-extrabold text-white min-[390px]:inline">Maraayn Management System</span>
+          <span className="whitespace-nowrap text-[9px] font-extrabold text-white min-[390px]:hidden">Maraayn</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+            className="rounded-lg p-2 text-slate-200 hover:bg-white/10 hover:text-white"
+          >
+            {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </button>
+          <button
+            type="button"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            aria-label={sidebarOpen ? 'Close menu' : 'Open menu'}
+            className="rounded-lg p-1.5 text-slate-300 hover:bg-brand-navy-light hover:text-white"
+          >
+            {sidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Backdrop Overlay */}
@@ -184,12 +214,17 @@ export const BusinessLayout: React.FC = () => {
       {/* Main Content Workspace - Natural Flex Sibling with Independent Smooth Scroll */}
       <div className="flex-1 h-full flex flex-col min-w-0 w-full overflow-y-auto overflow-x-hidden">
         {/* Workspace Top Header */}
-        <header className="hidden md:flex bg-white border-b border-slate-200 px-8 py-3.5 items-center justify-between sticky top-0 z-20 shadow-sm shrink-0">
+        <header className="hidden md:flex relative bg-white border-b border-slate-200 px-8 py-3.5 items-center justify-between sticky top-0 z-20 shadow-sm shrink-0">
           <div>
             <h2 className="text-sm font-bold text-slate-800">
-              {tenant?.name} — <span className="text-slate-500 font-normal">Maraayn Business</span>
+              {tenant?.name}
             </h2>
             <p className="text-xs text-brand-amber font-semibold">Your Business, In One Place</p>
+          </div>
+
+          <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2.5 pointer-events-none">
+            <img src="/logo.png" alt="" className="system-logo h-9 w-9 rounded-lg object-contain" />
+            <span className="whitespace-nowrap text-sm font-extrabold tracking-tight text-slate-800">Maraayn Management System</span>
           </div>
 
           <div className="flex items-center space-x-4">
@@ -201,6 +236,15 @@ export const BusinessLayout: React.FC = () => {
             <div className="h-5 w-px bg-slate-200" />
             <NotificationsDropdown />
             <div className="h-5 w-px bg-slate-200" />
+            <button
+              type="button"
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+              className="p-2 rounded-xl text-slate-600 hover:bg-slate-100 transition-colors"
+            >
+              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
             <div className="flex items-center space-x-2">
               <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
                 {user?.businessRole || 'Staff'}

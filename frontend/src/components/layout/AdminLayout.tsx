@@ -11,12 +11,16 @@ import {
   Menu,
   X,
   ShieldAlert,
+  Moon,
+  Sun,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.js';
 import { NotificationsDropdown } from '../common/NotificationsDropdown.js';
+import { useBusinessTheme } from '../../context/BusinessThemeContext.js';
 
 export const AdminLayout: React.FC = () => {
   const { user, logout } = useAuth();
+  const { theme, setTheme } = useBusinessTheme();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -41,12 +45,25 @@ export const AdminLayout: React.FC = () => {
           </div>
           <span className="font-extrabold text-sm tracking-wide text-brand-amber">CONTROL CENTER</span>
         </div>
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-brand-navy-light"
-        >
-          {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+            className="rounded-lg p-2 text-slate-200 hover:bg-white/10 hover:text-white"
+          >
+            {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </button>
+          <button
+            type="button"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            aria-label={sidebarOpen ? 'Close menu' : 'Open menu'}
+            className="rounded-lg p-1.5 text-slate-300 hover:bg-brand-navy-light hover:text-white"
+          >
+            {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Backdrop Overlay */}
@@ -130,6 +147,15 @@ export const AdminLayout: React.FC = () => {
             <p className="text-xs text-slate-500">Your Business, In One Place</p>
           </div>
           <div className="flex items-center space-x-4">
+            <button
+              type="button"
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+              className="rounded-xl p-2 text-slate-600 transition-colors hover:bg-slate-100"
+            >
+              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </button>
             <NotificationsDropdown />
             <div className="h-6 w-px bg-slate-200" />
             <div className="flex items-center space-x-2">

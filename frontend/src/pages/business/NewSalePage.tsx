@@ -19,7 +19,6 @@ import {
   CakeSlice,
   Cookie,
   CupSoda,
-  Package,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import api, { resolveApiAssetUrl } from '../../api/client.js';
@@ -42,6 +41,7 @@ export const NewSalePage: React.FC = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [searchProduct, setSearchProduct] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
+  const [productQuantities, setProductQuantities] = useState<Record<string, string>>({});
 
   // Cart
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -49,8 +49,9 @@ export const NewSalePage: React.FC = () => {
   const [selectedCustomer, setSelectedCustomer] = useState<string>('');
   const [customerName, setCustomerName] = useState('Walk-in Customer');
   const [customerPhone, setCustomerPhone] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState<'CASH' | 'MOBILE_MONEY' | 'BANK_TRANSFER' | 'OTHER'>('CASH');
+  const paymentMethod = 'CASH' as const;
   const [amountPaid, setAmountPaid] = useState<number>(0);
+  const [amountPaidInput, setAmountPaidInput] = useState('0.00');
   const [dueDate, setDueDate] = useState<string>('');
   const [saleNotes, setSaleNotes] = useState('');
 
@@ -97,16 +98,21 @@ export const NewSalePage: React.FC = () => {
     return Tag;
   };
 
-  const addToCart = (product: Product) => {
+  const addToCart = (product: Product, quantity = 1) => {
     if (product.currentQuantity <= 0) {
       alert(`Badeecada "${product.name}" hadda kuma jirto kaydka!`);
+      return;
+    }
+    if (!Number.isInteger(quantity) || quantity < 1) return;
+    if (quantity > product.currentQuantity) {
+      alert(`Kaydka waxaa ku haray kaliya ${product.currentQuantity} ${product.unit}.`);
       return;
     }
 
     setCart((prev) => {
       const existing = prev.find((item) => item.product._id === product._id);
       if (existing) {
-        if (existing.quantity >= product.currentQuantity) {
+        if (existing.quantity + quantity > product.currentQuantity) {
           alert(`Kaydka wax ka badan ma gadan kartid. Waxaa haray: ${product.currentQuantity}`);
           return prev;
         }
@@ -114,8 +120,8 @@ export const NewSalePage: React.FC = () => {
           item.product._id === product._id
             ? {
                 ...item,
-                quantity: item.quantity + 1,
-                total: (item.quantity + 1) * item.unitPrice - item.discount,
+                quantity: item.quantity + quantity,
+                total: (item.quantity + quantity) * item.unitPrice - item.discount,
               }
             : item,
         );
@@ -124,10 +130,10 @@ export const NewSalePage: React.FC = () => {
           ...prev,
           {
             product,
-            quantity: 1,
+            quantity,
             unitPrice: product.sellingPrice,
             discount: 0,
-            total: product.sellingPrice,
+            total: quantity * product.sellingPrice,
           },
         ];
       }
@@ -169,6 +175,7 @@ export const NewSalePage: React.FC = () => {
   useEffect(() => {
     if (saleType === 'CASH_SALE') {
       setAmountPaid(grandTotal);
+      setAmountPaidInput(grandTotal.toFixed(2));
     }
   }, [saleType, grandTotal]);
 
@@ -352,12 +359,12 @@ export const NewSalePage: React.FC = () => {
                   role="button"
                   tabIndex={inStock ? 0 : -1}
                   onKeyDown={(event) => {
-                    if (inStock && (event.key === 'Enter' || event.key === ' ')) {
+                    if (event.target === event.currentTarget && inStock && (event.key === 'Enter' || event.key === ' ')) {
                       event.preventDefault();
                       addToCart(p);
                     }
                   }}
-                  aria-label={`${p.name}, ${currency}${formatMoney(p.sellingPrice)}. Ku dar iibka.`}
+                  aria-label={`${p.name}, ${currency}${formatMoney(p.sellingPrice)}. Taabo si aad hal xabbo ugu darto.`}
                   className={`group overflow-hidden rounded-2xl border bg-white text-left transition-all duration-200 ${
                     inStock
                       ? 'border-slate-200 hover:-translate-y-0.5 hover:border-brand-amber hover:shadow-md cursor-pointer'
@@ -373,8 +380,16 @@ export const NewSalePage: React.FC = () => {
                         loading="lazy"
                       />
                     ) : (
-                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-brand-navy shadow-sm">
-                        <Package className="h-5 w-5" />
+                      <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-white p-1.5 shadow-sm">
+                        <img
+                          src={resolveApiAssetUrl(tenant?.logoUrl || '/logo.png')}
+                          alt={`${tenant?.name || 'Dukaanka'} logo`}
+                          className="h-full w-full object-contain"
+                          onError={(event) => {
+                            const image = event.currentTarget;
+                            if (!image.src.endsWith('/logo.png')) image.src = '/logo.png';
+                          }}
+                        />
                       </div>
                     )}
                     <span className={`absolute right-2 top-2 rounded-full px-2 py-1 text-[9px] font-bold shadow-sm ${inStock ? 'bg-white/95 text-emerald-700' : 'bg-rose-100 text-rose-700'}`}>
@@ -386,9 +401,42 @@ export const NewSalePage: React.FC = () => {
                     <h4 className="mt-0.5 min-h-8 line-clamp-2 text-[11px] font-bold leading-4 text-slate-800 group-hover:text-brand-navy">{p.name}</h4>
                     <div className="mt-2 flex items-center justify-between gap-1 border-t border-slate-100 pt-2">
                       <span className="text-xs font-black text-brand-navy">{currency}{formatMoney(p.sellingPrice)}</span>
-                      <span className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-[9px] font-bold ${inStock ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-400'}`}>
-                        <Plus className="h-3 w-3" /> Ku dar
-                      </span>
+                      <div className="flex items-center gap-1">
+                        <input
+                          type="number"
+                          min={1}
+                          max={p.currentQuantity}
+                          step={1}
+                          value={productQuantities[p._id] ?? '1'}
+                          aria-label={`Tirada ${p.name} ee lagu darayo`}
+                          disabled={!inStock}
+                          onClick={(event) => event.stopPropagation()}
+                          onKeyDown={(event) => event.stopPropagation()}
+                          onChange={(event) => {
+                            setProductQuantities((current) => ({
+                              ...current,
+                              [p._id]: event.target.value,
+                            }));
+                          }}
+                          onBlur={() => {
+                            if (!productQuantities[p._id]) {
+                              setProductQuantities((current) => ({ ...current, [p._id]: '1' }));
+                            }
+                          }}
+                          className="w-12 rounded-lg border border-slate-200 bg-white px-1 py-1 text-center text-[10px] font-bold text-slate-800"
+                        />
+                        <button
+                          type="button"
+                          disabled={!inStock || !Number.isInteger(Number(productQuantities[p._id] ?? 1)) || Number(productQuantities[p._id] ?? 1) < 1}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            addToCart(p, Number(productQuantities[p._id] ?? 1));
+                          }}
+                          className={`inline-flex items-center gap-0.5 rounded-full px-2 py-1 text-[9px] font-bold ${inStock ? 'bg-emerald-600 text-white hover:bg-emerald-700' : 'bg-slate-100 text-slate-400'}`}
+                        >
+                          <Plus className="h-3 w-3" /> Ku dar
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -478,7 +526,11 @@ export const NewSalePage: React.FC = () => {
             <div className="grid grid-cols-2 gap-2 text-xs">
               <button
                 type="button"
-                onClick={() => setSaleType('CASH_SALE')}
+                onClick={() => {
+                  setSaleType('CASH_SALE');
+                  setAmountPaid(grandTotal);
+                  setAmountPaidInput(grandTotal.toFixed(2));
+                }}
                 className={`py-2 px-3 rounded-xl font-bold flex items-center justify-center space-x-1.5 border transition-all ${
                   saleType === 'CASH_SALE'
                     ? 'bg-brand-navy text-white border-brand-navy shadow-sm'
@@ -491,7 +543,11 @@ export const NewSalePage: React.FC = () => {
 
               <button
                 type="button"
-                onClick={() => setSaleType('CREDIT_SALE')}
+                onClick={() => {
+                  setSaleType('CREDIT_SALE');
+                  setAmountPaid(0);
+                  setAmountPaidInput('');
+                }}
                 className={`py-2 px-3 rounded-xl font-bold flex items-center justify-center space-x-1.5 border transition-all ${
                   saleType === 'CREDIT_SALE'
                     ? 'bg-brand-amber text-brand-navy border-brand-amber shadow-sm'
@@ -504,7 +560,7 @@ export const NewSalePage: React.FC = () => {
             </div>
             {saleType === 'CREDIT_SALE' && (
               <p className="mt-2 rounded-lg bg-amber-50 px-2.5 py-2 text-[11px] font-medium text-amber-900">
-                Iibkan dayn ayuu noqonayaa markaad xaqiijiso. Alaabta kaydka waa laga jarayaa, dayntana macmiilka ayaa loo diiwaangelinayaa.
+                Geli inta uu hadda bixiyay. Lacagta harsan dayn ahaan ayaa loogu diiwaangelinayaa macmiilka.
               </p>
             )}
           </div>
@@ -580,16 +636,29 @@ export const NewSalePage: React.FC = () => {
             <div className="p-3 bg-amber-50/70 border border-amber-200 rounded-xl space-y-2.5 text-xs">
               <div>
                 <label className="block font-bold text-amber-900 mb-1">
-                  Down Payment Amount (Qaddarka la bixiyay hadda)
+                  Lacagta uu hadda bixiyay
                 </label>
                 <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  max={grandTotal}
-                  value={amountPaid}
-                  onChange={(e) => setAmountPaid(Number(e.target.value))}
-                  placeholder="0.00"
+                  type="text"
+                  inputMode="decimal"
+                  value={amountPaidInput}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (!/^\d*(\.\d{0,2})?$/.test(value)) return;
+                    setAmountPaidInput(value);
+                    const parsed = value === '' || value === '.' ? 0 : Number(value);
+                    setAmountPaid(Math.min(Math.max(0, parsed), grandTotal));
+                  }}
+                  onBlur={() => {
+                    const parsed = amountPaidInput === '' || amountPaidInput === '.' ? 0 : Number(amountPaidInput);
+                    const normalized = Math.min(Math.max(0, Number.isFinite(parsed) ? parsed : 0), grandTotal);
+                    setAmountPaid(normalized);
+                    setAmountPaidInput(normalized.toFixed(2));
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') e.currentTarget.blur();
+                  }}
+                  placeholder="Tusaale: 40.00"
                   className="w-full p-2 bg-white border border-amber-300 rounded-lg font-bold text-slate-900"
                 />
               </div>
@@ -612,26 +681,11 @@ export const NewSalePage: React.FC = () => {
               </div>
 
               <div className="flex justify-between font-bold pt-1 text-rose-700 border-t border-amber-200">
-                <span>Remaining Debt Recorded:</span>
+                <span>Daynta hadhaysa:</span>
                 <span>{currency}{remainingBalance.toFixed(2)}</span>
               </div>
             </div>
           )}
-
-          {/* Payment Method Selector */}
-          <div className="text-xs">
-            <label className="block font-bold text-slate-700 mb-1.5">Payment Method</label>
-            <select
-              value={paymentMethod}
-              onChange={(e) => setPaymentMethod(e.target.value as any)}
-              className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800"
-            >
-              <option value="CASH">Cash</option>
-              <option value="MOBILE_MONEY">Mobile Money (EVC / Zaad / Sahal / M-Pesa)</option>
-              <option value="BANK_TRANSFER">Bank Transfer / Remittance</option>
-              <option value="OTHER">Other</option>
-            </select>
-          </div>
 
           {/* Totals Summary */}
           <div className="rounded-xl bg-slate-50 p-3 border border-slate-100 space-y-2 text-xs">

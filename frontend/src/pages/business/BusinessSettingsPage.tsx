@@ -9,10 +9,13 @@ import {
   AlertCircle,
   Upload,
   Plus,
+  Moon,
+  Sun,
 } from 'lucide-react';
 import api, { resolveApiAssetUrl } from '../../api/client.js';
 import { useAuth } from '../../context/AuthContext.js';
 import { StorageMeter } from '../../components/common/StorageMeter.js';
+import { useBusinessTheme } from '../../context/BusinessThemeContext.js';
 
 const formatStorageBytes = (bytes: number = 0) => {
   if (bytes < 1024) return `${bytes} B`;
@@ -23,6 +26,7 @@ const formatStorageBytes = (bytes: number = 0) => {
 
 export const BusinessSettingsPage: React.FC = () => {
   const { tenant, updateTenantData } = useAuth();
+  const { theme, setTheme } = useBusinessTheme();
   const [activeTab, setActiveTab] = useState<'profile' | 'receipt' | 'storage' | 'staff'>('profile');
   const [loading, setLoading] = useState(false);
   const [logoLoading, setLogoLoading] = useState(false);
@@ -178,6 +182,19 @@ export const BusinessSettingsPage: React.FC = () => {
           <button type="button" onClick={() => setErrorMessage('')} className="font-bold text-rose-700 hover:text-rose-900">Xir</button>
         </div>
       )}
+
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <h2 className="text-sm font-extrabold text-slate-800">Muuqaalka dukaanka</h2>
+        <p className="mt-1 text-xs text-slate-500">Dooro muuqaalka aad rabto in ganacsigaagu isticmaalo.</p>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <button type="button" onClick={() => setTheme('light')} aria-pressed={theme === 'light'} className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-xs font-bold transition-colors ${theme === 'light' ? 'border-brand-navy bg-brand-navy text-white' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'}`}>
+            <Sun className="h-4 w-4" /> Iftiin (Light)
+          </button>
+          <button type="button" onClick={() => setTheme('dark')} aria-pressed={theme === 'dark'} className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-xs font-bold transition-colors ${theme === 'dark' ? 'border-brand-navy bg-brand-navy text-white' : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'}`}>
+            <Moon className="h-4 w-4" /> Madow (Dark)
+          </button>
+        </div>
+      </section>
 
       {/* Tabs */}
       <div className="flex gap-2 border-b border-slate-200 pb-2 text-xs font-bold text-slate-600">
