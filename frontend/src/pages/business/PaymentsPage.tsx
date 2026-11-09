@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  CreditCard,
   Search,
-  Calendar,
-  User,
-  DollarSign,
   Eye,
   Edit2,
   Ban,
@@ -12,7 +8,6 @@ import {
   CheckCircle2,
   AlertCircle,
   FileText,
-  Filter,
 } from 'lucide-react';
 import api from '../../api/client.js';
 import { useAuth } from '../../context/AuthContext.js';
@@ -73,7 +68,8 @@ export const PaymentsPage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchPayments();
+    void Promise.resolve().then(() => fetchPayments());
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
   }, [methodFilter]);
 
   // Handle open receipt preview
@@ -82,7 +78,7 @@ export const PaymentsPage: React.FC = () => {
       const res = await api.get(`/payments/${p._id}/receipt`);
       setSelectedReceipt(res.data);
       setReceiptModalOpen(true);
-    } catch (err) {
+    } catch {
       // Fallback: construct receipt from payment record
       setSelectedReceipt({
         receiptNumber: p.receiptNumber || p.paymentNumber,

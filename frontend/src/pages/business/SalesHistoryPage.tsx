@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import {
-  Receipt,
   Search,
-  Filter,
   Plus,
-  Printer,
   Eye,
-  Calendar,
   Edit2,
   Ban,
   X,
@@ -75,7 +71,8 @@ export const SalesHistoryPage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchSales();
+    void Promise.resolve().then(() => fetchSales());
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
   }, [saleTypeFilter]);
 
   const openReceipt = (sale: any) => {

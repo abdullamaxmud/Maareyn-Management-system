@@ -1,21 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import {
   CreditCard,
-  Search,
-  Filter,
-  DollarSign,
-  Calendar,
   AlertCircle,
   CheckCircle2,
   X,
   Receipt,
-  Clock,
   History,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import api from '../../api/client.js';
 import { useAuth } from '../../context/AuthContext.js';
-import { Debt } from '../../types/index.js';
 import { ReceiptModal } from '../../components/common/ReceiptModal.js';
 import { formatMoney } from '../../utils/format.js';
 
@@ -25,7 +19,7 @@ export const DebtsPage: React.FC = () => {
   const [summary, setSummary] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('ALL');
-  const [search, setSearch] = useState('');
+  const [search, _setSearch] = useState('');
 
   // Payment Modal
   const [repayModalOpen, setRepayModalOpen] = useState(false);
@@ -66,13 +60,9 @@ export const DebtsPage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchDebts();
+    void Promise.resolve().then(() => fetchDebts());
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
   }, [statusFilter]);
-
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    fetchDebts();
-  };
 
   const openRepayModal = (debt: any) => {
     setSelectedDebt(debt);

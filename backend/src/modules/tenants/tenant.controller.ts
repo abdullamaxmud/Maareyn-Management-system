@@ -4,7 +4,6 @@ import { Model } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard.js';
 import { TenantGuard } from '../../common/guards/tenant.guard.js';
-import { CurrentUser } from '../../common/decorators/current-user.decorator.js';
 import { Tenant, TenantDocument } from '../../schemas/tenant.schema.js';
 import { User, UserDocument } from '../../schemas/user.schema.js';
 import { StorageUsage, StorageUsageDocument } from '../../schemas/storage-usage.schema.js';
@@ -30,7 +29,7 @@ export class TenantController {
   }
 
   @Patch('settings')
-  async updateSettings(@Req() req: any, @Body() body: any, @CurrentUser() user: any) {
+  async updateSettings(@Req() req: any, @Body() body: any) {
     const tenant = req.tenant;
 
     // Allow updating branding and contact

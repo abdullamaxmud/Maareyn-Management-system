@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Store, PlusCircle, CheckCircle, AlertCircle, ArrowLeft, Upload, Key, ShieldCheck } from 'lucide-react';
+import { CheckCircle, AlertCircle, ArrowLeft } from 'lucide-react';
 import api from '../../api/client.js';
 
 export const AddNewMarketPage: React.FC = () => {

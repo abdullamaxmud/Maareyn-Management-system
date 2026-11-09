@@ -1,3 +1,4 @@
+/* oxlint-disable react/only-export-components */
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import api from '../api/client.js';
 import { User, Tenant } from '../types/index.js';

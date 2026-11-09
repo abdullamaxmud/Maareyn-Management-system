@@ -1,6 +1,5 @@
 ﻿import React, { useEffect, useState } from 'react';
 import {
-  Users,
   Search,
   Plus,
   Phone,
@@ -62,7 +61,8 @@ export const CustomersPage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchCustomers();
+    void Promise.resolve().then(() => fetchCustomers());
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
   }, [hasDebtFilter]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -405,7 +405,7 @@ export const CustomersPage: React.FC = () => {
               <div className="flex items-center justify-between pb-4 border-b border-slate-100">
                 <div>
                   <h3 className="font-extrabold text-slate-900 text-base">{selectedCustomer.name}</h3>
-                  <p className="text-xs text-slate-500 font-mono mt-0.5">{selectedCustomer.code} â€¢ {selectedCustomer.phone}</p>
+                  <p className="text-xs text-slate-500 font-mono mt-0.5">{selectedCustomer.code} • {selectedCustomer.phone}</p>
                 </div>
                 <button
                   onClick={() => setSelectedCustomer(null)}

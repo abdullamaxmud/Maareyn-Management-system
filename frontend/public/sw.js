@@ -1,13 +1,6 @@
 const CACHE_NAME = 'maraayn-cache-v2-dev-bypass';
-const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/logo.png',
-  '/favicon.png',
-  '/favicon.ico',
-];
 
-self.addEventListener('install', (event) => {
+self.addEventListener('install', () => {
   self.skipWaiting();
 });
 

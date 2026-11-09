@@ -7,9 +7,6 @@ import {
   Trash2,
   CreditCard,
   Banknote,
-  DollarSign,
-  User,
-  Calendar,
   AlertCircle,
   CheckCircle2,
   LayoutGrid,
@@ -174,8 +171,10 @@ export const NewSalePage: React.FC = () => {
   // Sync amountPaid if Cash Sale
   useEffect(() => {
     if (saleType === 'CASH_SALE') {
-      setAmountPaid(grandTotal);
-      setAmountPaidInput(grandTotal.toFixed(2));
+      void Promise.resolve().then(() => {
+        setAmountPaid(grandTotal);
+        setAmountPaidInput(grandTotal.toFixed(2));
+      });
     }
   }, [saleType, grandTotal]);
 

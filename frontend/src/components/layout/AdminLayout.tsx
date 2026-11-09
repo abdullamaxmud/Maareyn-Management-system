@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import { Outlet, NavLink } from 'react-router-dom';
 import {
   LayoutDashboard,
   Store,
@@ -10,7 +10,6 @@ import {
   LogOut,
   Menu,
   X,
-  ShieldAlert,
   Moon,
   Sun,
 } from 'lucide-react';
@@ -22,7 +21,6 @@ export const AdminLayout: React.FC = () => {
   const { user, logout } = useAuth();
   const { theme, setTheme } = useBusinessTheme();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const navigate = useNavigate();
 
   const isSuperAdmin = user?.platformRole === 'SUPER_ADMIN';
 

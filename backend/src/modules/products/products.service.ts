@@ -121,7 +121,7 @@ export class ProductsService {
     return saved;
   }
 
-  async update(tenantId: Types.ObjectId, id: string, body: any, userId: any) {
+  async update(tenantId: Types.ObjectId, id: string, body: any, _userId?: any) {
     if (!Types.ObjectId.isValid(id)) throw new BadRequestException('Invalid product ID');
     const product = await this.productModel.findOne({ _id: id, tenantId }).exec();
     if (!product) throw new NotFoundException('Product not found');

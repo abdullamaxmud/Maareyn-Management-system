@@ -26,7 +26,7 @@ export class StoredFile {
 
 @Schema({ timestamps: true })
 export class StorageUsage {
-  @Prop({ type: Types.ObjectId, ref: 'Tenant', required: true, unique: true, index: true })
+  @Prop({ type: Types.ObjectId, ref: 'Tenant', required: true, unique: true })
   tenantId: Types.ObjectId;
 
   @Prop({ default: 0 })
@@ -37,5 +37,4 @@ export class StorageUsage {
 }
 
 export const StorageUsageSchema = SchemaFactory.createForClass(StorageUsage);
-StorageUsageSchema.index({ tenantId: 1 });
 

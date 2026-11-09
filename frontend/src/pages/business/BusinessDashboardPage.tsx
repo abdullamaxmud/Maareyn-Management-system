@@ -12,7 +12,6 @@ import {
   Plus,
   Receipt,
   CheckCircle,
-  Clock,
   TrendingDown,
   Minus,
 } from 'lucide-react';
@@ -24,8 +23,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  BarChart,
-  Bar,
   PieChart,
   Pie,
   Cell,
@@ -39,26 +36,25 @@ export const BusinessDashboardPage: React.FC = () => {
   const { tenant } = useAuth();
   const [period, setPeriod] = useState('month');
   const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [_loading, setLoading] = useState(true);
 
   const currency = tenant?.currencySymbol || '$';
 
-  const fetchDashboard = async (selectedPeriod: string) => {
-    setLoading(true);
-    try {
-      const res = await api.get('/reports/dashboard', {
-        params: { period: selectedPeriod },
-      });
-      setData(res.data);
-    } catch (err) {
-      console.error('Failed to load business dashboard:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchDashboard(period);
+    const fetchDashboard = async () => {
+      try {
+        const res = await api.get('/reports/dashboard', {
+          params: { period },
+        });
+        setData(res.data);
+      } catch (err) {
+        console.error('Failed to load business dashboard:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboard();
   }, [period]);
 
   const stats = data?.stats;

@@ -2,16 +2,13 @@ import React, { useEffect, useState } from 'react';
 import {
   Users,
   PlusCircle,
-  Shield,
   CheckCircle2,
-  AlertTriangle,
   X,
   Pencil,
   Trash2,
   Ban,
   Mail,
   Phone,
-  Lock,
   Search,
 } from 'lucide-react';
 import api from '../../api/client.js';
@@ -71,7 +68,7 @@ export const AdminUsersPage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchAdmins();
+    void Promise.resolve().then(() => fetchAdmins());
   }, []);
 
   // Handle Create Admin

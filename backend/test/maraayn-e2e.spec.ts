@@ -1,8 +1,12 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { NestFactory } from '@nestjs/core';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { AppModule } from '../src/app.module.js';
 
-const BASE_URL = 'http://localhost:4000/api/v1';
+let BASE_URL = 'http://127.0.0.1:4000/api/v1';
 
 describe('Maraayn Management System — End-to-End Workflows & Security', () => {
+  let app: INestApplication | null = null;
   let superAdminToken = '';
   let businessToken = '';
   let tenantId = '';
@@ -11,6 +15,35 @@ describe('Maraayn Management System — End-to-End Workflows & Security', () => 
   let createdSaleId = '';
   let createdDebtId = '';
   let createdReceiptNumber = '';
+
+  beforeAll(async () => {
+    try {
+      const probe = await fetch(`${BASE_URL}/auth/me`);
+      if (probe.status) {
+        return;
+      }
+    } catch {
+      app = await NestFactory.create(AppModule, { logger: false });
+      app.setGlobalPrefix('api/v1');
+      app.useGlobalPipes(
+        new ValidationPipe({
+          whitelist: true,
+          transform: true,
+          forbidNonWhitelisted: false,
+        }),
+      );
+      await app.listen(0, '127.0.0.1');
+      const serverAddress = app.getHttpServer().address();
+      const port = typeof serverAddress === 'object' && serverAddress ? serverAddress.port : 4000;
+      BASE_URL = `http://127.0.0.1:${port}/api/v1`;
+    }
+  }, 30000);
+
+  afterAll(async () => {
+    if (app) {
+      await app.close();
+    }
+  });
 
   it('1. Should successfully log in Super Admin and return SUPER_ADMIN role', async () => {
     const res = await fetch(`${BASE_URL}/auth/login`, {
@@ -61,6 +94,7 @@ describe('Maraayn Management System — End-to-End Workflows & Security', () => 
 
     businessToken = data.accessToken;
     tenantId = data.tenant.id;
+    expect(tenantId).toBeDefined();
   });
 
   it('4. SECURITY & TENANT ISOLATION: Business user must be forbidden from platform admin endpoints', async () => {
@@ -172,6 +206,7 @@ describe('Maraayn Management System — End-to-End Workflows & Security', () => 
     createdSaleId = result.sale._id;
     createdDebtId = result.debt._id;
     createdReceiptNumber = result.receipt.receiptNumber;
+    expect(createdSaleId).toBeDefined();
 
     // Verify product stock was reduced from 20 to 16
     const prodRes = await fetch(`${BASE_URL}/products/${createdProductId}`, {

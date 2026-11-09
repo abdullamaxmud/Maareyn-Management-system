@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsString, IsEmail, IsOptional, IsNumber, Min, IsEnum } from 'class-validator';
-import { TenantStatus, PlatformRole, BusinessCategory } from '../../../common/constants/roles.enum.js';
+import { TenantStatus, PlatformRole } from '../../../common/constants/roles.enum.js';
 
 export class CreateMarketDto {
   @IsNotEmpty({ message: 'Magaca ganacsiga waa loo baahan yahay' })

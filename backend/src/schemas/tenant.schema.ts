@@ -108,7 +108,6 @@ export class Tenant {
 }
 
 export const TenantSchema = SchemaFactory.createForClass(Tenant);
-TenantSchema.index({ businessCode: 1 });
 TenantSchema.index({ status: 1 });
 TenantSchema.index({ ownerEmail: 1 });
 

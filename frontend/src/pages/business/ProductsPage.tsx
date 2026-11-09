@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Package,
   Search,
   Plus,
   Edit2,
-  SlidersHorizontal,
   AlertTriangle,
   X,
-  CheckCircle,
   TrendingUp,
   TrendingDown,
   Minus,
@@ -22,7 +19,7 @@ export const ProductsPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('ALL');
+  const [categoryFilter] = useState('ALL');
   const [stockStatus, setStockStatus] = useState('ALL');
 
   // Modals
@@ -68,7 +65,8 @@ export const ProductsPage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchProducts();
+    void Promise.resolve().then(() => fetchProducts());
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryFilter, stockStatus]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {

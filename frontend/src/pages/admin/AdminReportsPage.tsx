@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FileBarChart, HardDrive, Store, Download, Shield } from 'lucide-react';
+import { HardDrive, Store, Shield } from 'lucide-react';
 import api from '../../api/client.js';
 
 export const AdminReportsPage: React.FC = () => {

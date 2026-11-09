@@ -1,6 +1,5 @@
 import { Controller, Post, Get, Param, UseInterceptors, UploadedFile, Body, UseGuards, Req, Res } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Response } from 'express';
 import { StorageService } from './storage.service.js';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard.js';
 import { TenantGuard } from '../../common/guards/tenant.guard.js';

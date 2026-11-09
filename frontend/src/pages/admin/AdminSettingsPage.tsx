@@ -1,5 +1,4 @@
 import React from 'react';
-import { Settings, Shield, HardDrive, Bell } from 'lucide-react';
 
 export const AdminSettingsPage: React.FC = () => {
   return (

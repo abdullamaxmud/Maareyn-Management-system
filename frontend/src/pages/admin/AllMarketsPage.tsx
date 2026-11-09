@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import {
-  Store,
   Search,
-  Filter,
   PlusCircle,
   HardDrive,
   AlertTriangle,
   CheckCircle,
-  XCircle,
-  Sliders,
   X,
-  ExternalLink,
 } from 'lucide-react';
 import api from '../../api/client.js';
-import { StorageMeter } from '../../components/common/StorageMeter.js';
 
 export const AllMarketsPage: React.FC = () => {
   const [markets, setMarkets] = useState<any[]>([]);
@@ -49,7 +43,8 @@ export const AllMarketsPage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchMarkets();
+    void Promise.resolve().then(() => fetchMarkets());
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
   }, [statusFilter, categoryFilter]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {

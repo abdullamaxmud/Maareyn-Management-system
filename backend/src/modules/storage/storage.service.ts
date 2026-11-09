@@ -28,7 +28,7 @@ export class StorageService {
     tenantId: Types.ObjectId,
     file: any,
     category: string = 'product',
-    userId?: any,
+    _userId?: any,
   ) {
     if (!file) throw new BadRequestException('Fadlan soo dooro file-ka aad rabto inaad geliso');
 

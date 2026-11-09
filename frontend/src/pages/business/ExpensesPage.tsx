@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TrendingDown, Plus, Search, Calendar, DollarSign, X } from 'lucide-react';
+import { TrendingDown, Plus, X } from 'lucide-react';
 import api from '../../api/client.js';
 import { useAuth } from '../../context/AuthContext.js';
 import { formatMoney } from '../../utils/format.js';
@@ -33,7 +33,7 @@ export const ExpensesPage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchExpenses();
+    void Promise.resolve().then(() => fetchExpenses());
   }, []);
 
   const handleCreate = async (e: React.FormEvent) => {

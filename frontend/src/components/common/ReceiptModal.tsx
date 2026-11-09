@@ -96,6 +96,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ isOpen, onClose, rec
   const [loadingAction, setLoadingAction] = useState<string | null>(null);
   const [showWhatsAppGuide, setShowWhatsAppGuide] = useState(false);
   const [guideMessage, setGuideMessage] = useState('');
+  const [fallbackDate] = useState(() => new Date().toISOString());
   const receiptRef = useRef<HTMLDivElement>(null);
 
   if (!isOpen) return null;
@@ -507,7 +508,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ isOpen, onClose, rec
                 <div className="flex items-center space-x-2">
                   <span className="font-black text-slate-900 pb-1">Taariikh</span>
                   <span className="font-medium text-slate-800 border-b border-dotted border-slate-400 px-2 pb-1 min-w-[140px] text-center">
-                    {new Date(receiptData.createdAt || Date.now()).toLocaleString('so-SO')}
+                    {new Date(receiptData.createdAt || fallbackDate).toLocaleString('so-SO')}
                   </span>
                 </div>
               </div>
@@ -695,7 +696,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ isOpen, onClose, rec
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">Taariikh:</span>
-                  <span>{new Date(receiptData.createdAt || Date.now()).toLocaleString('so-SO')}</span>
+                  <span>{new Date(receiptData.createdAt || fallbackDate).toLocaleString('so-SO')}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">Macmiil:</span>

@@ -1,10 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  Settings,
-  HardDrive,
-  Palette,
-  Printer,
-  Users,
   CheckCircle,
   AlertCircle,
   Upload,

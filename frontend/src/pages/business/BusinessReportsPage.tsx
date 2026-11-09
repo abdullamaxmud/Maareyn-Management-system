@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
-  FileText,
   Download,
   Printer,
-  Calendar,
   TrendingUp,
   DollarSign,
   Package,
@@ -22,24 +20,23 @@ export const BusinessReportsPage: React.FC = () => {
 
   const currency = tenant?.currencySymbol || '$';
 
-  const fetchReport = async () => {
-    setLoading(true);
-    try {
-      const res = await api.get('/reports/export', {
-        params: {
-          type: reportType,
-          period,
-        },
-      });
-      setData(res.data || []);
-    } catch (err) {
-      console.error('Failed to load report:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchReport = async () => {
+      try {
+        const res = await api.get('/reports/export', {
+          params: {
+            type: reportType,
+            period,
+          },
+        });
+        setData(res.data || []);
+      } catch (err) {
+        console.error('Failed to load report:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchReport();
   }, [reportType, period]);
 

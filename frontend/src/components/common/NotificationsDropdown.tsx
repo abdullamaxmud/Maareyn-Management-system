@@ -8,17 +8,17 @@ export const NotificationsDropdown: React.FC = () => {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  const fetchNotifications = async () => {
-    try {
-      const res = await api.get('/notifications');
-      if (res.data) {
-        setNotifications(res.data.notifications || []);
-        setUnreadCount(res.data.unreadCount || 0);
-      }
-    } catch {}
-  };
-
   useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const res = await api.get('/notifications');
+        if (res.data) {
+          setNotifications(res.data.notifications || []);
+          setUnreadCount(res.data.unreadCount || 0);
+        }
+      } catch {}
+    };
+
     fetchNotifications();
     const interval = setInterval(fetchNotifications, 45000); // Polling every 45s
     return () => clearInterval(interval);

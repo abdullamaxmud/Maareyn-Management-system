@@ -46,7 +46,7 @@ export class SeedService implements OnApplicationBootstrap {
 
     // 1. Super Admin
     const superAdminPassword = await bcrypt.hash('yDnSl700', salt);
-    const superAdmin = await this.userModel.create({
+    await this.userModel.create({
       name: 'Anas Abdiwahid (Super Admin)',
       email: 'anasabdiwahidhussein@gmail.com',
       username: 'anasabdiwahidhussein@gmail.com',
@@ -164,7 +164,7 @@ export class SeedService implements OnApplicationBootstrap {
       status: 'ACTIVE',
     });
 
-    const p3 = await this.productModel.create({
+    await this.productModel.create({
       tenantId: tenant1._id,
       name: 'Sonkor Brazilian 50kg',
       sku: 'BAR-SUG-50KG',
@@ -210,7 +210,7 @@ export class SeedService implements OnApplicationBootstrap {
       status: 'ACTIVE',
     });
 
-    const c2 = await this.customerModel.create({
+    await this.customerModel.create({
       tenantId: tenant1._id,
       name: 'Safiyo Cabdi Maxamed',
       phone: '+252615998877',
@@ -224,7 +224,7 @@ export class SeedService implements OnApplicationBootstrap {
       status: 'ACTIVE',
     });
 
-    const c3 = await this.customerModel.create({
+    await this.customerModel.create({
       tenantId: tenant1._id,
       name: 'Cabdullaahi Nuur Guuleed',
       phone: '+252615223344',
